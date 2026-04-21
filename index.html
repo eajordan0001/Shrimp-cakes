@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>❤️日本咔哩咔哩/大片日本蝦餅❤️ 團購助手 V4.3</title>
+    <title>❤️日本咔哩咔哩/大片日本蝦餅❤️ 團購助手 V4.4</title>
     <style>
         :root { --main: #FF007F; --dark: #1a1a1a; --line: #00B900; --red: #ff4d4d; --bg: #FFF0F5; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, "Noto Sans TC", sans-serif; }
@@ -24,16 +24,20 @@
         .section-h { font-weight: bold; margin: 18px 0 10px; display: block; font-size: 16px; color: #444; border-left: 5px solid #000; padding-left: 10px; }
         .opt-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border: 1.5px solid #f0f0f0; border-radius: 12px; background: #fafafa; cursor: pointer; font-weight: bold; margin-bottom: 10px; }
         .opt-row.active { border-color: #000; background: #fffde6; }
-        .qty-controls { display: flex; align-items: center; gap: 8px; }
-        .qty-btn { background: #eee; color: #000; border: none; border-radius: 5px; font-weight: bold; width: 28px; height: 28px; visibility: hidden; }
-        .qty-num { font-size: 16px; color: #000; visibility: hidden; width: 20px; text-align: center; }
-        .opt-row.active .qty-btn, .opt-row.active .qty-num { visibility: visible; }
+        
+        /* 數量輸入框優化 */
+        .qty-controls { display: flex; align-items: center; gap: 5px; visibility: hidden; }
+        .opt-row.active .qty-controls { visibility: visible; }
+        .qty-btn { background: #eee; color: #000; border: none; border-radius: 5px; font-weight: bold; width: 32px; height: 32px; font-size: 18px; cursor: pointer; }
+        .qty-input { width: 45px; height: 32px; text-align: center; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; font-weight: bold; -moz-appearance: textfield; }
+        .qty-input::-webkit-outer-spin-button, .qty-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
         .input-box { width: 100%; padding: 16px; border: 2px solid #eee; border-radius: 15px; font-size: 16px; outline: none; margin-top: 5px; }
-        .btn-submit { width: 100%; background: var(--main); color: #fff; padding: 18px; border-radius: 18px; font-weight: bold; font-size: 18px; border: none; margin-top: 25px; }
+        .btn-submit { width: 100%; background: var(--main); color: #fff; padding: 18px; border-radius: 18px; font-weight: bold; font-size: 18px; border: none; margin-top: 25px; cursor: pointer; }
         .order-item { background: #fff; margin-top: 10px; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ddd; }
-        .footer { position: fixed; bottom: 0; width: 100%; background: #fff; padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -8px 25px rgba(0,0,0,0.1); }
+        .footer { position: fixed; bottom: 0; width: 100%; background: #fff; padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -8px 25px rgba(0,0,0,0.1); z-index: 100; }
         .price-num { font-size: 32px; font-weight: 900; color: #d00; }
-        .btn-line { background: var(--line); color: #fff; padding: 15px 30px; border-radius: 15px; font-weight: bold; text-decoration: none; font-size: 17px; }
+        .btn-line { background: var(--line); color: #fff; padding: 15px 30px; border-radius: 15px; font-weight: bold; text-decoration: none; font-size: 17px; border:none; cursor:pointer; }
         .modal-bg { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: #fff; width: 85%; max-width: 350px; padding: 30px 20px; border-radius: 30px; text-align: center; }
     </style>
@@ -58,30 +62,30 @@
             <div class="card-body">
                 <h2 id="cur-u-name" style="margin:0"></h2>
                 
-                <span class="section-h">1. 咔哩咔哩 </span>
+                <span class="section-h">1. 咔哩咔哩口味</span>
                 <div class="items-list">
-                    <div class="opt-row i-opt active" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">1. 無調味</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">2. 原味（糖粉）</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">3. 梅子</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">4. 甜海苔</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">5. 鹹海苔</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">6. 胡椒</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">7. 芥末</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">8. 蒜味</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">9. 辣味</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">10. 海苔辣味</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
+                    <div class="opt-row i-opt active" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">1. 無調味</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><input type="number" class="qty-input" value="1" onclick="event.stopPropagation()" onchange="syncQty(this)"><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
+                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">2. 原味（糖粉）</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><input type="number" class="qty-input" value="1" onclick="event.stopPropagation()" onchange="syncQty(this)"><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
+                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">3. 梅子</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><input type="number" class="qty-input" value="1" onclick="event.stopPropagation()" onchange="syncQty(this)"><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
+                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">4. 甜海苔</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><input type="number" class="qty-input" value="1" onclick="event.stopPropagation()" onchange="syncQty(this)"><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
+                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">5. 鹹海苔</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><input type="number" class="qty-input" value="1" onclick="event.stopPropagation()" onchange="syncQty(this)"><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
+                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">6. 胡椒</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><input type="number" class="qty-input" value="1" onclick="event.stopPropagation()" onchange="syncQty(this)"><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
+                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">7. 芥末</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><input type="number" class="qty-input" value="1" onclick="event.stopPropagation()" onchange="syncQty(this)"><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
+                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">8. 蒜味</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><input type="number" class="qty-input" value="1" onclick="event.stopPropagation()" onchange="syncQty(this)"><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
+                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">9. 辣味</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><input type="number" class="qty-input" value="1" onclick="event.stopPropagation()" onchange="syncQty(this)"><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
+                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">10. 海苔辣味</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><input type="number" class="qty-input" value="1" onclick="event.stopPropagation()" onchange="syncQty(this)"><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
                 </div>
 
-                <span class="section-h">2. 大片日本蝦餅 </span>
+                <span class="section-h">2. 大片日本蝦餅口味</span>
                 <div class="items-list">
-                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)"><span class="opt-name">1. 原味 (無調味)</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)"><span class="opt-name">2. 梅子</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)"><span class="opt-name">3. 海苔</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)"><span class="opt-name">4. 胡椒</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)"><span class="opt-name">5. 芥末</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)"><span class="opt-name">6. 辣味</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)"><span class="opt-name">7. 蒜味</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)"><span class="opt-name">8. ㊙️白魚片㊙️ (限量)</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
+                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)"><span class="opt-name">1. 原味 (無調味)</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><input type="number" class="qty-input" value="1" onclick="event.stopPropagation()" onchange="syncQty(this)"><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
+                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)"><span class="opt-name">2. 梅子</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><input type="number" class="qty-input" value="1" onclick="event.stopPropagation()" onchange="syncQty(this)"><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
+                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)"><span class="opt-name">3. 海苔</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><input type="number" class="qty-input" value="1" onclick="event.stopPropagation()" onchange="syncQty(this)"><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
+                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)"><span class="opt-name">4. 胡椒</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><input type="number" class="qty-input" value="1" onclick="event.stopPropagation()" onchange="syncQty(this)"><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
+                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)"><span class="opt-name">5. 芥末</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><input type="number" class="qty-input" value="1" onclick="event.stopPropagation()" onchange="syncQty(this)"><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
+                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)"><span class="opt-name">6. 辣味</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><input type="number" class="qty-input" value="1" onclick="event.stopPropagation()" onchange="syncQty(this)"><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
+                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)"><span class="opt-name">7. 蒜味</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><input type="number" class="qty-input" value="1" onclick="event.stopPropagation()" onchange="syncQty(this)"><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
+                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)"><span class="opt-name">8. ㊙️白魚片㊙️ (限量)</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><input type="number" class="qty-input" value="1" onclick="event.stopPropagation()" onchange="syncQty(this)"><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
                 </div>
 
                 <span class="section-h">3. 備註</span>
@@ -103,8 +107,8 @@
         <h3>新增姓名</h3>
         <input type="text" id="name-in" class="input-box" style="text-align:center">
         <div style="display:flex;gap:10px;margin-top:20px;">
-            <button onclick="showM(false)" style="flex:1;padding:15px;border:none;border-radius:10px;">取消</button>
-            <button onclick="addU()" style="flex:1;padding:15px;border:none;border-radius:10px;background:var(--main);color:#fff;">確定</button>
+            <button onclick="showM(false)" style="flex:1;padding:15px;border:none;border-radius:10px;cursor:pointer;">取消</button>
+            <button onclick="addU()" style="flex:1;padding:15px;border:none;border-radius:10px;background:var(--main);color:#fff;cursor:pointer;">確定</button>
         </div>
     </div>
 </div>
@@ -121,18 +125,37 @@
         document.querySelectorAll('.i-opt').forEach(b=>b.classList.remove('active')); 
         el.classList.add('active'); 
         t=el.dataset.ty; f=el.querySelector('.opt-name').innerText; 
-        qty=parseInt(el.querySelector('.qty-num').innerText); 
+        qty=parseInt(el.querySelector('.qty-input').value) || 1; 
     }
     
+    // 按鈕調整
     function adj(btn,d){ 
         event.stopPropagation(); 
-        let n=btn.parentNode.querySelector('.qty-num'); 
-        let v=parseInt(n.innerText)+d; 
-        if(v<1)v=1; n.innerText=v; 
+        let input=btn.parentNode.querySelector('.qty-input'); 
+        let v=(parseInt(input.value) || 0) + d; 
+        if(v<1) v=1; 
+        input.value=v; 
         if(btn.closest('.i-opt').classList.contains('active')) qty=v;
     }
 
-    function addO(){ if(cur<0)return; users[cur].orders.push({t,f,q:qty,n:document.getElementById('note-in').value.trim()}); document.getElementById('note-in').value=''; render();}
+    // 手動輸入同步
+    function syncQty(input){
+        let v = parseInt(input.value);
+        if(isNaN(v) || v < 1) v = 1;
+        input.value = v;
+        if(input.closest('.i-opt').classList.contains('active')) qty = v;
+    }
+
+    function addO(){ 
+        if(cur<0)return; 
+        users[cur].orders.push({t,f,q:qty,n:document.getElementById('note-in').value.trim()}); 
+        document.getElementById('note-in').value=''; 
+        // 加入後將所有輸入框重設為 1
+        document.querySelectorAll('.qty-input').forEach(i => i.value = 1);
+        qty = 1;
+        render();
+    }
+
     function calc(c){ return Math.floor(c/3)*200 + Math.floor((c%3)/2)*150 + ((c%3)%2)*80; }
 
     function render(){
@@ -147,7 +170,7 @@
         if(cur>=0){
             document.getElementById('welcome').style.display='none'; document.getElementById('order-ui').style.display='block';
             document.getElementById('cur-u-name').innerText=`👤 ${users[cur].name}`;
-            let oh=''; users[cur].orders.forEach((o,oi)=>oh+=`<div class="order-item"><div><b>${o.f}</b> $${80*o.q}<br><small>(${o.q}包)${o.n?' 📝'+o.n:''}</small></div><button onclick="users[${cur}].orders.splice(${oi},1);render()" style="color:var(--red);border:1px solid;padding:5px;border-radius:5px;background:none;">刪除</button></div>`);
+            let oh=''; users[cur].orders.forEach((o,oi)=>oh+=`<div class="order-item"><div><b>${o.f}</b> $${80*o.q}<br><small>(${o.q}包)${o.n?' 📝'+o.n:''}</small></div><button onclick="users[${cur}].orders.splice(${oi},1);render()" style="color:var(--red);border:1px solid;padding:5px;border-radius:5px;background:none;cursor:pointer;">刪除</button></div>`);
             document.getElementById('items-box').innerHTML=oh || '<p style="text-align:center;color:#aaa">清單為空</p>';
         }
         document.getElementById('total').innerText=`$${calc(gQ)}`; document.getElementById('t-qty').innerText=gQ;
