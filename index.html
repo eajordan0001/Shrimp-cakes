@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>❤️日本咔哩咔哩/大片日本蝦餅❤️ 團購助手 V4.6</title>
+    <title>❤️日本咔哩咔哩/大片日本蝦餅❤️ 團購助手 V4.7</title>
     <style>
         :root { --main: #FF007F; --dark: #1a1a1a; --line: #00B900; --red: #ff4d4d; --bg: #FFF0F5; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, "Noto Sans TC", sans-serif; }
@@ -59,13 +59,13 @@
             <div class="card-body">
                 <h2 id="cur-u-name" style="margin:0"></h2>
                 
-                <span class="section-h">1. 咔哩咔哩口味</span>
+                <span class="section-h">1. 咔哩咔哩</span>
                 <div class="items-list" id="list-kali"></div>
 
-                <span class="section-h">2. 大片日本蝦餅口味</span>
+                <span class="section-h">2. 大片日本蝦餅</span>
                 <div class="items-list" id="list-shrimp"></div>
 
-                <span class="section-h">3. 全域備註 (選填)</span>
+                <span class="section-h">3. 備註 (選填)</span>
                 <input type="text" id="note-in" class="input-box" placeholder="備註會隨品項加入...">
             </div>
         </div>
@@ -97,10 +97,10 @@
     defaults.forEach(n=>users.push({name:n, orders:[]}));
 
     function initMenu() {
-        const renderList = (arr, targetId, type) => {
+        const renderList = (arr, targetId, type, prefix) => {
             let h = '';
             arr.forEach(f => {
-                h += `<div class="opt-row i-opt" data-ty="${type}" data-name="${f}" onclick="setI(this)">
+                h += `<div class="opt-row i-opt" data-ty="${type}" data-prefix="${prefix}" data-name="${f}" onclick="setI(this)">
                     <span class="opt-name">${f}</span>
                     <div class="qty-controls">
                         <button class="qty-btn" onclick="adj(this,-1)">-</button>
@@ -112,8 +112,8 @@
             });
             document.getElementById(targetId).innerHTML = h;
         };
-        renderList(kali, 'list-kali', '卡哩卡哩');
-        renderList(shrimp, 'list-shrimp', '大片蝦餅');
+        renderList(kali, 'list-kali', '卡哩卡哩', '卡哩');
+        renderList(shrimp, 'list-shrimp', '大片蝦餅', '蝦餅');
     }
 
     function showM(s){ document.getElementById('modal').style.display=s?'flex':'none'; }
@@ -126,7 +126,19 @@
         if(cur < 0) return;
         let row = btn.closest('.i-opt');
         let q = parseInt(row.querySelector('.qty-input').value) || 1;
-        users[cur].orders.push({ t:row.dataset.ty, f:row.dataset.name, q:q, n:document.getElementById('note-in').value.trim() });
+        let prefix = row.dataset.prefix;
+        let flavor = row.dataset.name;
+        let note = document.getElementById('note-in').value.trim();
+        let fullName = `[${prefix}] ${flavor}`;
+
+        // 智慧合併邏輯：檢查目前使用者是否有點過相同品項且備註相同
+        let existingOrder = users[cur].orders.find(o => o.f === fullName && o.n === note);
+        if (existingOrder) {
+            existingOrder.q += q;
+        } else {
+            users[cur].orders.push({ t:row.dataset.ty, f:fullName, q:q, n:note });
+        }
+
         row.querySelector('.qty-input').value = 1;
         document.getElementById('note-in').value = '';
         render();
@@ -154,40 +166,24 @@
 
     function goLine(){
         if(!users.some(u=>u.orders.length)) return alert("沒人點餐喔");
-        
-        let m="【❤️咔哩咔哩/蝦餅❤️ 團購報表】\n\n", gQ=0;
-        let summary = {}; // 用於存放店家彙總
-
-        // 1. 個人名單與彙總邏輯
+        let m="【❤️咔哩咔哩/蝦餅❤️ 團購報表】\n\n", gQ=0, summary = {};
         users.forEach(u=>{ 
             if(u.orders.length){ 
-                let uQ=u.orders.reduce((s,o)=>s+o.q,0); 
-                gQ+=uQ; 
+                let uQ=u.orders.reduce((s,o)=>s+o.q,0); gQ+=uQ; 
                 m+=`👤 [${u.name}]\n`; 
                 u.orders.forEach(o=>{
                     m+=`▫️ ${o.f} x ${o.q}包${o.n?'('+o.n+')':''}\n`;
-                    // 彙總計算
-                    let key = `[${o.t}] ${o.f}`;
-                    summary[key] = (summary[key] || 0) + o.q;
+                    summary[o.f] = (summary[o.f] || 0) + o.q;
                 }); 
                 m+=`💰 小計：$${calc(uQ)}\n\n`; 
             }
         });
-
-        // 2. 插入店家彙總清單
         m+=`==================\n🏠 【店家彙總清單】\n`;
-        Object.keys(summary).sort().forEach(item => {
-            m+=`📦 ${item}：${summary[item]} 包\n`;
-        });
-
-        // 3. 總計
+        Object.keys(summary).sort().forEach(item => m+=`📦 ${item}：${summary[item]} 包\n`);
         m+=`==================\n🏠 總包數：${gQ} 包\n💰 總金額：$${calc(gQ)} 元`;
-        
         window.location.href="https://line.me/R/msg/text/?"+encodeURIComponent(m);
     }
-    
-    initMenu();
-    render();
+    initMenu(); render();
 </script>
 </body>
 </html>
