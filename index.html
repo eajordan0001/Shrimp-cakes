@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>❤️日本咔哩咔哩/大片日本蝦餅❤️ 團購助手 V4.5</title>
+    <title>❤️日本咔哩咔哩/大片日本蝦餅❤️ 團購助手 V4.6</title>
     <style>
         :root { --main: #FF007F; --dark: #1a1a1a; --line: #00B900; --red: #ff4d4d; --bg: #FFF0F5; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, "Noto Sans TC", sans-serif; }
@@ -22,24 +22,15 @@
         .card-img { width: 100%; height: auto; max-height: 250px; object-fit: contain; background: #fff; }
         .card-body { padding: 20px; }
         .section-h { font-weight: bold; margin: 18px 0 10px; display: block; font-size: 16px; color: #444; border-left: 5px solid #000; padding-left: 10px; }
-        
-        /* 品項列與數量控制優化 */
         .opt-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border: 1.5px solid #f0f0f0; border-radius: 12px; background: #fafafa; cursor: pointer; font-weight: bold; margin-bottom: 8px; }
         .opt-row.active { border-color: #000; background: #fffde6; }
         .opt-name { flex: 1; font-size: 15px; }
-        
         .qty-controls { display: flex; align-items: center; gap: 4px; visibility: hidden; margin-left: 5px; }
         .opt-row.active .qty-controls { visibility: visible; }
-        
         .qty-btn { background: #eee; color: #000; border: none; border-radius: 5px; font-weight: bold; width: 30px; height: 30px; font-size: 18px; cursor: pointer; }
-        .qty-input { width: 40px; height: 30px; text-align: center; border: 1px solid #ccc; border-radius: 5px; font-size: 15px; font-weight: bold; -moz-appearance: textfield; }
-        .qty-input::-webkit-outer-spin-button, .qty-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        
-        /* 快速加入按鈕 */
+        .qty-input { width: 40px; height: 30px; text-align: center; border: 1px solid #ccc; border-radius: 5px; font-size: 15px; font-weight: bold; }
         .btn-quick-add { background: var(--main); color: white; border: none; border-radius: 5px; width: 35px; height: 30px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-
         .input-box { width: 100%; padding: 16px; border: 2px solid #eee; border-radius: 15px; font-size: 16px; outline: none; margin-top: 5px; }
-        .btn-submit { width: 100%; background: var(--main); color: #fff; padding: 18px; border-radius: 18px; font-weight: bold; font-size: 18px; border: none; margin-top: 25px; cursor: pointer; }
         .order-item { background: #fff; margin-top: 10px; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ddd; }
         .footer { position: fixed; bottom: 0; width: 100%; background: #fff; padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -8px 25px rgba(0,0,0,0.1); z-index: 100; }
         .price-num { font-size: 32px; font-weight: 900; color: #d00; }
@@ -53,7 +44,7 @@
 <div class="header">❤️日本咔哩咔哩/大片日本蝦餅❤️</div>
 <div class="price-info">💰<b>1包80元</b> / 💰<b>2包150元</b> / 💰<b>3包200元</b></div>
 
-<div class="user-nav" id="tabs"><button class="btn-add" onclick="showM(true)">+ 新增</button></div>
+<div class="user-nav" id="tabs"></div>
 
 <div class="container">
     <div id="welcome" style="text-align:center; padding: 60px 20px;">
@@ -68,17 +59,14 @@
             <div class="card-body">
                 <h2 id="cur-u-name" style="margin:0"></h2>
                 
-                <span class="section-h">咔哩咔哩</span>
-                <div class="items-list" id="list-kali">
-                    </div>
+                <span class="section-h">1. 咔哩咔哩口味</span>
+                <div class="items-list" id="list-kali"></div>
 
-                <span class="section-h">大片日本蝦餅</span>
-                <div class="items-list" id="list-shrimp">
-                    </div>
+                <span class="section-h">2. 大片日本蝦餅口味</span>
+                <div class="items-list" id="list-shrimp"></div>
 
                 <span class="section-h">3. 全域備註 (選填)</span>
-                <input type="text" id="note-in" class="input-box" placeholder="例如：由XX代付、要袋子等...">
-                <p style="font-size:12px; color:gray; text-align:center;">※ 點擊口味右側「✓」即可直接加入清單</p>
+                <input type="text" id="note-in" class="input-box" placeholder="備註會隨品項加入...">
             </div>
         </div>
         <div id="items-box"></div>
@@ -95,8 +83,8 @@
         <h3>新增姓名</h3>
         <input type="text" id="name-in" class="input-box" style="text-align:center">
         <div style="display:flex;gap:10px;margin-top:20px;">
-            <button onclick="showM(false)" style="flex:1;padding:15px;border:none;border-radius:10px;cursor:pointer;">取消</button>
-            <button onclick="addU()" style="flex:1;padding:15px;border:none;border-radius:10px;background:var(--main);color:#fff;cursor:pointer;">確定</button>
+            <button onclick="showM(false)" style="flex:1;padding:15px;border:none;border-radius:10px;">取消</button>
+            <button onclick="addU()" style="flex:1;padding:15px;border:none;border-radius:10px;background:var(--main);color:#fff;">確定</button>
         </div>
     </div>
 </div>
@@ -105,21 +93,18 @@
     let users=[], cur=-1;
     const kali = ["1. 無調味","2. 原味（糖粉）","3. 梅子","4. 甜海苔","5. 鹹海苔","6. 胡椒","7. 芥末","8. 蒜味","9. 辣味","10. 海苔辣味"];
     const shrimp = ["1. 原味 (無調味)","2. 梅子","3. 海苔","4. 胡椒","5. 芥末","6. 辣味","7. 蒜味","8. ㊙️白魚片㊙️ (限量)"];
-    
     const defaults=["主任","嘉綾","Dora","怡如","晶晶","Wendy","婷婷","佳佳","瑄瑄","小天使"];
     defaults.forEach(n=>users.push({name:n, orders:[]}));
 
-    // 初始化菜單介面
     function initMenu() {
         const renderList = (arr, targetId, type) => {
             let h = '';
             arr.forEach(f => {
-                h += `
-                <div class="opt-row i-opt" data-ty="${type}" data-name="${f}" onclick="setI(this)">
+                h += `<div class="opt-row i-opt" data-ty="${type}" data-name="${f}" onclick="setI(this)">
                     <span class="opt-name">${f}</span>
                     <div class="qty-controls">
                         <button class="qty-btn" onclick="adj(this,-1)">-</button>
-                        <input type="number" class="qty-input" value="1" onclick="event.stopPropagation()" onchange="syncQty(this)">
+                        <input type="number" class="qty-input" value="1" onclick="event.stopPropagation()">
                         <button class="qty-btn" onclick="adj(this,1)">+</button>
                         <button class="btn-quick-add" onclick="quickAdd(this)">✓</button>
                     </div>
@@ -133,40 +118,15 @@
 
     function showM(s){ document.getElementById('modal').style.display=s?'flex':'none'; }
     function addU(){ let n=document.getElementById('name-in').value.trim(); if(n){users.push({name:n,orders:[]}); cur=users.length-1; showM(false); render();}}
-    
-    function setI(el){ 
-        document.querySelectorAll('.i-opt').forEach(b=>b.classList.remove('active')); 
-        el.classList.add('active'); 
-    }
-    
-    function adj(btn,d){ 
-        event.stopPropagation(); 
-        let input=btn.parentNode.querySelector('.qty-input'); 
-        let v=(parseInt(input.value) || 0) + d; 
-        if(v<1) v=1; 
-        input.value=v; 
-    }
+    function setI(el){ document.querySelectorAll('.i-opt').forEach(b=>b.classList.remove('active')); el.classList.add('active'); }
+    function adj(btn,d){ event.stopPropagation(); let input=btn.parentNode.querySelector('.qty-input'); let v=(parseInt(input.value) || 0)+d; if(v<1)v=1; input.value=v; }
 
-    function syncQty(input){
-        let v = parseInt(input.value);
-        if(isNaN(v) || v < 1) v = 1;
-        input.value = v;
-    }
-
-    // 快速加入功能
     function quickAdd(btn) {
         event.stopPropagation();
-        if(cur < 0) return alert("請先選擇人員");
-        
+        if(cur < 0) return;
         let row = btn.closest('.i-opt');
-        let type = row.dataset.ty;
-        let flavor = row.dataset.name;
         let q = parseInt(row.querySelector('.qty-input').value) || 1;
-        let note = document.getElementById('note-in').value.trim();
-        
-        users[cur].orders.push({ t:type, f:flavor, q:q, n:note });
-        
-        // 重設該列數量與備註
+        users[cur].orders.push({ t:row.dataset.ty, f:row.dataset.name, q:q, n:document.getElementById('note-in').value.trim() });
         row.querySelector('.qty-input').value = 1;
         document.getElementById('note-in').value = '';
         render();
@@ -186,17 +146,43 @@
         if(cur>=0){
             document.getElementById('welcome').style.display='none'; document.getElementById('order-ui').style.display='block';
             document.getElementById('cur-u-name').innerText=`👤 ${users[cur].name}`;
-            let oh=''; users[cur].orders.forEach((o,oi)=>oh+=`<div class="order-item"><div><b>${o.f}</b> $${80*o.q}<br><small>(${o.q}包)${o.n?' 📝'+o.n:''}</small></div><button onclick="users[${cur}].orders.splice(${oi},1);render()" style="color:var(--red);border:1px solid;padding:5px;border-radius:5px;background:none;cursor:pointer;">刪除</button></div>`);
-            document.getElementById('items-box').innerHTML=oh || '<p style="text-align:center;color:#aaa">清單為空</p>';
+            let oh=''; users[cur].orders.forEach((o,oi)=>oh+=`<div class="order-item"><div><b>${o.f}</b> $${80*o.q}<br><small>(${o.q}包)${o.n?' 📝'+o.n:''}</small></div><button onclick="users[${cur}].orders.splice(${oi},1);render()" style="color:var(--red);border:1px solid;padding:5px;border-radius:5px;background:none;">刪除</button></div>`);
+            document.getElementById('items-box').innerHTML=oh || '<p style="text-align:center;color:#aaa">目前清單為空</p>';
         }
         document.getElementById('total').innerText=`$${calc(gQ)}`; document.getElementById('t-qty').innerText=gQ;
     }
 
     function goLine(){
         if(!users.some(u=>u.orders.length)) return alert("沒人點餐喔");
-        let m="【❤️咔哩咔哩/蝦餅❤️ 團購報表】\n", gQ=0;
-        users.forEach(u=>{ if(u.orders.length){ let uQ=u.orders.reduce((s,o)=>s+o.q,0); gQ+=uQ; m+=`👤 [${u.name}]\n`; u.orders.forEach(o=>m+=`▫️ ${o.f} x ${o.q}包${o.n?'('+o.n+')':''}\n`); m+=`💰 個人合計：$${calc(uQ)} (${uQ}包)\n\n`; }});
-        m+=`==================\n🏠 店家總計：${gQ} 包\n💰 團購總額：$${calc(gQ)}元`;
+        
+        let m="【❤️咔哩咔哩/蝦餅❤️ 團購報表】\n\n", gQ=0;
+        let summary = {}; // 用於存放店家彙總
+
+        // 1. 個人名單與彙總邏輯
+        users.forEach(u=>{ 
+            if(u.orders.length){ 
+                let uQ=u.orders.reduce((s,o)=>s+o.q,0); 
+                gQ+=uQ; 
+                m+=`👤 [${u.name}]\n`; 
+                u.orders.forEach(o=>{
+                    m+=`▫️ ${o.f} x ${o.q}包${o.n?'('+o.n+')':''}\n`;
+                    // 彙總計算
+                    let key = `[${o.t}] ${o.f}`;
+                    summary[key] = (summary[key] || 0) + o.q;
+                }); 
+                m+=`💰 小計：$${calc(uQ)}\n\n`; 
+            }
+        });
+
+        // 2. 插入店家彙總清單
+        m+=`==================\n🏠 【店家彙總清單】\n`;
+        Object.keys(summary).sort().forEach(item => {
+            m+=`📦 ${item}：${summary[item]} 包\n`;
+        });
+
+        // 3. 總計
+        m+=`==================\n🏠 總包數：${gQ} 包\n💰 總金額：$${calc(gQ)} 元`;
+        
         window.location.href="https://line.me/R/msg/text/?"+encodeURIComponent(m);
     }
     
