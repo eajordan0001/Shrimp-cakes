@@ -3,38 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>❤️日本咔哩咔哩/大片日本蝦餅❤️ 團購助手 V4.2</title>
+    <title>❤️日本咔哩咔哩/大片日本蝦餅❤️ 團購助手 V4.1</title>
     <style>
+        /* V4 桃紅色系 */
         :root { --main: #FF007F; --dark: #1a1a1a; --line: #00B900; --red: #ff4d4d; --bg: #FFF0F5; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, "Noto Sans TC", sans-serif; }
         body { background: var(--bg); margin: 0; padding-bottom: 140px; color: #333; overflow-x: hidden; }
-        .header { background: #000; color: #fff; text-align: center; padding: 15px; font-weight: bold; position: sticky; top: 0; z-index: 100; }
+        
+        /* 頂部導航 & 價格區 */
+        .header { background: #000; color: #fff; text-align: center; padding: 15px; font-weight: bold; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
         .price-info { background: #fffde6; color: #444; text-align: center; padding: 12px; font-size: 14px; border-bottom: 2px solid #ddd; }
         .price-info b { color: var(--main); font-size: 16px; }
+
+        /* V4 人員導覽列 */
         .user-nav { background: #333; display: flex; overflow-x: auto; padding: 12px; gap: 10px; align-items: center; min-height: 65px; border-bottom: 2px solid #000; }
         .btn-add { background: #fff; color: #000; padding: 10px 18px; border-radius: 25px; font-weight: bold; font-size: 14px; border: none; flex-shrink: 0; cursor: pointer; }
-        .user-tab { background: #555; color: #eee; padding: 10px 18px; border-radius: 25px; white-space: nowrap; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-        .user-tab.active { background: #fff; color: #000; font-weight: bold; }
-        .cart-count { background: var(--main); color: #fff; border-radius: 50%; font-size: 11px; padding: 1px 6px; margin-left: -5px; }
+        .user-tab { background: #555; color: #eee; padding: 10px 18px; border-radius: 25px; white-space: nowrap; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.3s; }
+        .user-tab.active { background: #fff; color: #000; font-weight: bold; box-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        
+        /* V4 特有功能：購物數量顯示 */
+        .cart-count { background: var(--main); color: #fff; border-radius: 50%; font-size: 11px; padding: 1px 6px; font-weight: normal; margin-left: -5px; }
         .del-u { color: var(--red); font-weight: bold; font-size: 18px; padding-left: 5px; }
+
         .container { padding: 15px; max-width: 500px; margin: auto; }
+        
+        /* V4 卡片設計 */
         .card { background: #fff; border-radius: 24px; overflow: hidden; box-shadow: 0 12px 30px rgba(0,0,0,0.15); margin-bottom: 25px; }
-        /* 使用您提供的新圖片網址 */
+        
+        /* ❤️這裡是修正的核心：將 V4 品項示意圖替換成您的龍蝦廚師蝦餅圖❤️ */
         .card-img { width: 100%; height: 220px; object-fit: cover; background: #eee; border-bottom: 4px solid #000; }
+
         .card-body { padding: 20px; }
         .section-h { font-weight: bold; margin: 18px 0 10px; display: block; font-size: 16px; color: #444; border-left: 5px solid #000; padding-left: 10px; }
-        .opt-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border: 1.5px solid #f0f0f0; border-radius: 12px; background: #fafafa; cursor: pointer; font-weight: bold; margin-bottom: 10px; }
-        .opt-row.active { border-color: #000; background: #fffde6; }
+        
+        /* V4 品項按鈕（含數量控制） */
+        .opt-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border: 1.5px solid #f0f0f0; border-radius: 12px; background: #fafafa; cursor: pointer; font-weight: bold; font-size: 15px; margin-bottom: 10px; }
+        .opt-row.active { border-color: #000; background: #fffde6; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .opt-name { flex: 1; padding-right: 10px; }
+        
+        /* V4 數量設定 (1-99) */
         .qty-controls { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-        .qty-btn { background: #eee; color: #000; border: none; border-radius: 5px; font-weight: bold; width: 28px; height: 28px; visibility: hidden; }
+        .qty-btn { background: #eee; color: #000; border: none; border-radius: 5px; font-weight: bold; width: 28px; height: 28px; cursor: pointer; visibility: hidden; font-size: 16px; }
         .qty-num { font-size: 16px; color: #000; visibility: hidden; font-weight: bold; width: 20px; text-align: center; }
+        
+        /* 只有選取後才顯示數量控制 */
         .opt-row.active .qty-btn, .opt-row.active .qty-num { visibility: visible; }
-        .input-box { width: 100%; padding: 16px; border: 2px solid #eee; border-radius: 15px; font-size: 16px; outline: none; margin-top: 5px; }
-        .btn-submit { width: 100%; background: var(--main); color: #fff; padding: 18px; border-radius: 18px; font-weight: bold; font-size: 18px; border: none; margin-top: 25px; }
-        .order-item { background: #fff; margin-top: 10px; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ddd; }
-        .footer { position: fixed; bottom: 0; width: 100%; background: #fff; padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -8px 25px rgba(0,0,0,0.1); }
-        .price-num { font-size: 32px; font-weight: 900; color: #d00; }
-        .btn-line { background: var(--line); color: #fff; padding: 15px 30px; border-radius: 15px; font-weight: bold; text-decoration: none; font-size: 17px; }
+
+        .input-box { width: 100%; padding: 16px; border: 2px solid #eee; border-radius: 15px; font-size: 16px; outline: none; margin-top: 5px; -webkit-appearance: none; }
+        .btn-submit { width: 100%; background: var(--main); color: #fff; padding: 18px; border-radius: 18px; font-weight: bold; font-size: 18px; border: none; margin-top: 25px; cursor: pointer; transition: 0.2s; }
+        .btn-submit:active { transform: translateY(2px); }
+
+        /* V4 個人採購清單 */
+        .order-item { background: #fff; margin-top: 10px; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .order-info b { color: var(--main); font-size: 16px; }
+        .btn-del-o { color: var(--red); border: 1.5px solid var(--red); padding: 5px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; background: none; }
+
+        /* V4 底部結帳欄 */
+        .footer { position: fixed; bottom: 0; width: 100%; background: #fff; padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -8px 25px rgba(0,0,0,0.1); z-index: 500; }
+        .total-box { display: flex; flex-direction: column; }
+        .price-num { font-size: 32px; font-weight: 900; color: #d00; margin-top: -5px; }
+        .btn-line { background: var(--line); color: #fff; padding: 15px 30px; border-radius: 15px; font-weight: bold; text-decoration: none; font-size: 17px; cursor: pointer; border: none; }
+
+        /* V4 Modal 彈窗 */
         .modal-bg { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
         .modal-content { background: #fff; width: 85%; max-width: 350px; padding: 30px 20px; border-radius: 30px; text-align: center; }
     </style>
@@ -42,88 +72,357 @@
 <body>
 
 <div class="header">❤️日本咔哩咔哩/大片日本蝦餅❤️</div>
-<div class="price-info">💰<b>1包80元</b> / 💰<b>2包150元</b> / 💰<b>3包200元</b></div>
+<div class="price-info">
+    💰<b>1包80元</b> / 💰<b>2包150元</b> / 💰<b>3包200元</b><br>
+    <small>(買越多越划算！優惠將於 LINE 彙整時自動計算)</small>
+</div>
 
-<div class="user-nav" id="tabs"><button class="btn-add" onclick="showM(true)">+ 新增</button></div>
+<div class="user-nav" id="tabs">
+    <button class="btn-add" onclick="showModal(true)">+ 新增</button>
+</div>
 
 <div class="container">
     <div id="welcome" style="text-align:center; padding: 80px 20px;">
         <div style="font-size: 70px;">❤️</div>
-        <h2>歡迎團購</h2>
-        <p>請先點擊上方預設人員開始點餐</p>
+        <h2 style="color: #444;">歡迎團購</h2>
+        <p style="color: #666;">請先點擊上方預設人員開始點餐</p>
     </div>
 
     <div id="order-ui" style="display:none">
         <div class="card">
-            <img src="https://i.postimg.cc/vDRZq4L0/IMG-9147.png" class="card-img">
+            <img src="https://i.postimg.cc/W347wz1b/image-50.png" class="card-img">
             <div class="card-body">
-                <h2 id="cur-u-name"></h2>
+                <h2 id="cur-u-name" style="margin:0 0 15px 0;">👤 Wendy</h2>
                 
-                <span class="section-h">1. 品項與口味 (每包80元，買多有折)</span>
+                <span class="section-h">1. 卡哩卡哩口味 (每包80元，買多有折)</span>
                 <div class="items-list">
-                    <div class="opt-row i-opt active" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">1. 無調味</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">2. 原味（糖粉）</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)"><span class="opt-name">3. 梅子</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)"><span class="opt-name">大片蝦餅-原味</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)"><span class="opt-name">大片蝦餅-梅子</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
-                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)"><span class="opt-name">㊙️白魚片㊙️</span><div class="qty-controls"><button class="qty-btn" onclick="adj(this,-1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adj(this,1)">+</button></div></div>
+                    <div class="opt-row i-opt active" data-ty="卡哩卡哩" onclick="setI(this)">
+                        <span class="opt-name">1. 無調味</span>
+                        <div class="qty-controls">
+                            <button class="qty-btn" onclick="adjustQty(this, -1)">-</button>
+                            <span class="qty-num">1</span>
+                            <button class="qty-btn" onclick="adjustQty(this, 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)">
+                        <span class="opt-name">2. 原味（糖粉）</span>
+                        <div class="qty-controls"><button class="qty-btn" onclick="adjustQty(this, -1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adjustQty(this, 1)">+</button></div>
+                    </div>
+                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)">
+                        <span class="opt-name">3. 梅子</span>
+                        <div class="qty-controls"><button class="qty-btn" onclick="adjustQty(this, -1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adjustQty(this, 1)">+</button></div>
+                    </div>
+                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)">
+                        <span class="opt-name">4. 甜海苔</span>
+                        <div class="qty-controls"><button class="qty-btn" onclick="adjustQty(this, -1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adjustQty(this, 1)">+</button></div>
+                    </div>
+                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)">
+                        <span class="opt-name">5. 鹹海苔</span>
+                        <div class="qty-controls"><button class="qty-btn" onclick="adjustQty(this, -1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adjustQty(this, 1)">+</button></div>
+                    </div>
+                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)">
+                        <span class="opt-name">6. 胡椒</span>
+                        <div class="qty-controls"><button class="qty-btn" onclick="adjustQty(this, -1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adjustQty(this, 1)">+</button></div>
+                    </div>
+                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)">
+                        <span class="opt-name">7. 芥末</span>
+                        <div class="qty-controls"><button class="qty-btn" onclick="adjustQty(this, -1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adjustQty(this, 1)">+</button></div>
+                    </div>
+                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)">
+                        <span class="opt-name">8. 蒜味</span>
+                        <div class="qty-controls"><button class="qty-btn" onclick="adjustQty(this, -1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adjustQty(this, 1)">+</button></div>
+                    </div>
+                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)">
+                        <span class="opt-name">9. 辣味</span>
+                        <div class="qty-controls"><button class="qty-btn" onclick="adjustQty(this, -1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adjustQty(this, 1)">+</button></div>
+                    </div>
+                    <div class="opt-row i-opt" data-ty="卡哩卡哩" onclick="setI(this)">
+                        <span class="opt-name">10. 海苔辣味</span>
+                        <div class="qty-controls"><button class="qty-btn" onclick="adjustQty(this, -1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adjustQty(this, 1)">+</button></div>
+                    </div>
                 </div>
 
-                <span class="section-h">2. 備註 (選填)</span>
+                <span class="section-h">2. 大片日本蝦餅口味 (每包80元，買多有折)</span>
+                <div class="items-list">
+                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)">
+                        <span class="opt-name">1. 原味 (無調味)</span>
+                        <div class="qty-controls"><button class="qty-btn" onclick="adjustQty(this, -1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adjustQty(this, 1)">+</button></div>
+                    </div>
+                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)">
+                        <span class="opt-name">2. 梅子</span>
+                        <div class="qty-controls"><button class="qty-btn" onclick="adjustQty(this, -1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adjustQty(this, 1)">+</button></div>
+                    </div>
+                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)">
+                        <span class="opt-name">3. 海苔</span>
+                        <div class="qty-controls"><button class="qty-btn" onclick="adjustQty(this, -1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adjustQty(this, 1)">+</button></div>
+                    </div>
+                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)">
+                        <span class="opt-name">4. 胡椒</span>
+                        <div class="qty-controls"><button class="qty-btn" onclick="adjustQty(this, -1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adjustQty(this, 1)">+</button></div>
+                    </div>
+                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)">
+                        <span class="opt-name">5. 芥末</span>
+                        <div class="qty-controls"><button class="qty-btn" onclick="adjustQty(this, -1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adjustQty(this, 1)">+</button></div>
+                    </div>
+                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)">
+                        <span class="opt-name">6. 辣味</span>
+                        <div class="qty-controls"><button class="qty-btn" onclick="adjustQty(this, -1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adjustQty(this, 1)">+</button></div>
+                    </div>
+                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)">
+                        <span class="opt-name">7. 蒜味</span>
+                        <div class="qty-controls"><button class="qty-btn" onclick="adjustQty(this, -1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adjustQty(this, 1)">+</button></div>
+                    </div>
+                    <div class="opt-row i-opt" data-ty="大片蝦餅" onclick="setI(this)">
+                        <span class="opt-name">8. ㊙️白魚片㊙️ (限量)</span>
+                        <div class="qty-controls"><button class="qty-btn" onclick="adjustQty(this, -1)">-</button><span class="qty-num">1</span><button class="qty-btn" onclick="adjustQty(this, 1)">+</button></div>
+                    </div>
+                </div>
+
+                <span class="section-h">3. 備註 (選填)</span>
                 <input type="text" id="note-in" class="input-box" placeholder="選填：例如不要梅粉...">
-                <button class="btn-submit" onclick="addO()">確認加入清單</button>
+
+                <button class="btn-submit" onclick="doAdd()">確認加入清單</button>
             </div>
         </div>
-        <div id="items-box"></div>
+
+        <div id="u-list-area">
+            <h3 style="margin: 25px 0 10px; font-size: 18px;">📋 個人採購明細</h3>
+            <div id="items-box"></div>
+        </div>
     </div>
 </div>
 
 <div class="footer">
-    <div class="total-box">總包數：<span id="t-qty">0</span> 包<br><div class="price-num" id="total">$0</div></div>
-    <a href="#" class="btn-line" onclick="goLine()">匯出 LINE</a>
+    <div class="total-box">
+        <div class="price-label">團購總包數：<span id="total-qty" style="font-weight:bold;color:var(--main);">0</span> 包</div>
+        <div class="price-num" id="total">$0</div>
+    </div>
+    <a href="javascript:void(0)" class="btn-line" onclick="sendLine()">匯出 LINE</a>
 </div>
 
 <div class="modal-bg" id="modal">
     <div class="modal-content">
-        <h3>新增採購人員</h3>
-        <input type="text" id="name-in" class="input-box" style="text-align:center">
-        <div style="display:flex;gap:10px;margin-top:20px;"><button onclick="showM(false)" style="flex:1;padding:15px;border-radius:10px;border:none">取消</button><button onclick="addU()" style="flex:1;padding:15px;border-radius:10px;border:none;background:var(--main);color:#fff">確定</button></div>
+        <h3 style="margin-top:0">誰要採購？</h3>
+        <input type="text" id="name-in" class="input-box" style="text-align:center; font-size: 20px;" placeholder="姓名">
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button onclick="showModal(false)" style="flex:1; padding:15px; border:none; border-radius:10px; font-weight:bold; background:#eee; cursor:pointer;">取消</button>
+            <button onclick="doAddU()" style="flex:1; padding:15px; border:none; border-radius:10px; font-weight:bold; background:var(--main); color:#fff; cursor:pointer;">確定</button>
+        </div>
     </div>
 </div>
 
 <script>
-    let users=[], cur=-1, t="卡哩卡哩", f="1. 無調味", qty=1;
-    const defaults=["主任","嘉綾","Dora","怡如","晶晶","Wendy","婷婷","佳佳","瑄瑄","小天使"];
-    defaults.forEach(n=>users.push({name:n, orders:[]}));
+    let users = [];
+    let cur = -1;
+    let t = "卡哩卡哩", f = "1. 無調味", qty = 1;
 
-    function showM(s){ document.getElementById('modal').style.display=s?'flex':'none'; if(s){document.getElementById('name-in').value=''; setTimeout(()=>document.getElementById('name-in').focus(),200);}}
-    function addU(){ let n=document.getElementById('name-in').value.trim(); if(n){users.push({name:n,orders:[]}); cur=users.length-1; showM(false); render();}}
-    function setI(el){ document.querySelectorAll('.i-opt').forEach(b=>b.classList.remove('active')); el.classList.add('active'); t=el.dataset.ty; f=el.querySelector('.opt-name').innerText; qty=parseInt(el.querySelector('.qty-num').innerText);}
-    function adj(btn,d){ event.stopPropagation(); let n=btn.parentNode.querySelector('.qty-num'); let v=parseInt(n.innerText)+d; if(v<1)v=1; n.innerText=v; if(btn.closest('.i-opt').classList.contains('active')) qty=v;}
-    function addO(){ if(cur<0)return; users[cur].orders.push({t,f,q:qty,n:document.getElementById('note-in').value.trim()}); document.getElementById('note-in').value=''; render();}
-    function calc(c){ return Math.floor(c/3)*200 + Math.floor((c%3)/2)*150 + ((c%3)%2)*80; }
+    // V4 特有功能：預設人員清單 (保留新增功能)
+    function initDefaultUsers() {
+        const defaults = ["主任", "嘉綾", "Dora", "怡如", "晶晶", "Wendy", "婷婷", "佳佳", "瑄瑄", "小天使"];
+        defaults.forEach(n => users.push({ name: n, orders: [] }));
+        render(); // 初始不選取，顯示歡迎畫面
+    }
 
-    function render(){
-        let th='<button class="btn-add" onclick="showM(true)">+ 新增</button>', gQ=0;
-        users.forEach((u,i)=>{ let uQ=u.orders.reduce((s,o)=>s+o.q,0); gQ+=uQ; th+=`<div class="user-tab ${i===cur?'active':''}" onclick="cur=${i};render()"><span>${u.name}</span>${uQ>0?`<span class="cart-count">${uQ}</span>`:''}<span class="del-u" onclick="event.stopPropagation();users.splice(${i},1);cur=(cur==${i}?-1:cur);render()">×</span></div>`;});
-        document.getElementById('tabs').innerHTML=th;
-        if(cur>=0){
-            document.getElementById('welcome').style.display='none'; document.getElementById('order-ui').style.display='block';
-            document.getElementById('cur-u-name').innerText=`👤 ${users[cur].name}`;
-            let oh=''; users[cur].orders.forEach((o,oi)=>oh+=`<div class="order-item"><div><b>${o.f}</b> $${80*o.q}<br><small>(${o.q}包)${o.n?' 📝'+o.n:''}</small></div><button class="btn-del-o" onclick="users[${cur}].orders.splice(${oi},1);render()">刪除</button></div>`);
-            document.getElementById('items-box').innerHTML=oh || '<p style="color:#aaa;text-align:center;padding:20px;">清單為空</p>';
+    // Modal
+    function showModal(s) { 
+        document.getElementById('modal').style.display = s ? 'flex' : 'none'; 
+        if(s) { document.getElementById('name-in').value = ''; setTimeout(()=>document.getElementById('name-in').focus(), 300); }
+    }
+    
+    // 新增人員
+    function doAddU() {
+        let n = document.getElementById('name-in').value.trim();
+        if(!n) return;
+        users.push({ name: n, orders: [] });
+        cur = users.length - 1; // 自動選取新加入的人
+        showModal(false);
+        render();
+    }
+
+    // V4 品項與數量調整核心邏輯
+    function setI(el) {
+        // 先重置所有數量控制為1，確保乾淨
+        resetAllQtyControls();
+        
+        document.querySelectorAll('.i-opt').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        t = el.dataset.ty;
+        f = el.querySelector('.opt-name').innerText; // 口味直接從按鈕內容抓取
+        qty = 1; // 預設數量為1
+    }
+
+    // V4 數量加減 (1-99)
+    function adjustQty(btn, delta) {
+        event.stopPropagation(); // 阻止點擊數量影響品項選擇核心
+        const elQtyNum = btn.parentNode.querySelector('.qty-num');
+        let currentQty = parseInt(elQtyNum.innerText);
+        let newQty = currentQty + delta;
+        if(newQty < 1) newQty = 1;
+        if(newQty > 99) newQty = 99;
+        elQtyNum.innerText = newQty;
+        
+        // 如果該品項是被選取狀態，同步更新 qty 變數
+        if(btn.closest('.i-opt').classList.contains('active')) {
+            qty = newQty;
         }
-        document.getElementById('total').innerText=`$${calc(gQ)}`; document.getElementById('t-qty').innerText=gQ;
     }
 
-    function goLine(){
-        if(!users.some(u=>u.orders.length)) return alert("沒人點餐喔！");
-        let m="【❤️日本咔哩咔哩/蝦餅❤️ 團購明細】\n", gQ=0;
-        users.forEach(u=>{ if(u.orders.length){ let uQ=u.orders.reduce((s,o)=>s+o.q,0); gQ+=uQ; m+=`👤 [${u.name}]\n`; u.orders.forEach(o=>m+=`▫️ ${o.f} x ${o.q}包${o.n?' ('+o.n+')':''}\n`); m+=`💰 個人合計：$${calc(uQ)} (${uQ}包)\n\n`; }});
-        m+=`==================\n🏠 店家總計：${gQ} 包\n💰 團購總額：$${calc(gQ)}元`;
-        window.location.href="https://line.me/R/msg/text/?"+encodeURIComponent(m);
+    // 重置所有品項的數量顯示為1
+    function resetAllQtyControls() {
+        document.querySelectorAll('.qty-num').forEach(span => span.innerText = '1');
+        qty = 1;
     }
-    render();
+
+    // 加入訂單
+    function doAdd() {
+        if(cur < 0) return;
+        let note = document.getElementById('note-in').value.trim();
+        // 將數量 qty 也加入訂單內容 o
+        users[cur].orders.push({ t, f, q: qty, n: note }); 
+        document.getElementById('note-in').value = '';
+        resetAllQtyControls(); // 加入後重置數量控制
+        render();
+    }
+
+    // 刪除人員
+    function delU(idx, e) {
+        e.stopPropagation();
+        if(confirm(`確定刪除 ${users[idx].name} 嗎？`)) {
+            users.splice(idx, 1);
+            if(users.length === 0) cur = -1;
+            else if(idx === cur) cur = 0; // 如果刪除的是當前選取的，選取第一個
+            else if(idx < cur) cur--; // 如果刪除在當前選取的左邊，修正 index
+            render();
+        }
+    }
+
+    // 刪除單筆餐點
+    function delO(oi) {
+        users[cur].orders.splice(oi, 1);
+        render();
+    }
+
+    // ❤️❤️V4核心：複雜價格折扣計算邏輯❤️❤️
+    // (1包80, 2包150, 3包200) -> 優先吃滿 Bundle 3，再 Bundle 2，最後 Bundle 1
+    function calculatePrice(count) {
+        let total = 0;
+        let c = count;
+        // 1. 先吃滿 3 包優惠
+        let bundle3 = Math.floor(c / 3);
+        total += bundle3 * 200;
+        c %= 3;
+        // 2. 剩下吃 2 包優惠
+        let bundle2 = Math.floor(c / 2);
+        total += bundle2 * 150;
+        c %= 2;
+        // 3. 剩下吃單包原價
+        total += c * 80;
+        return total;
+    }
+
+    // V4 渲染 UI (含數量統計與折扣計價)
+    function render() {
+        const tabBox = document.getElementById('tabs');
+        const welcome = document.getElementById('welcome');
+        const orderUi = document.getElementById('order-ui');
+        const curNameDisp = document.getElementById('cur-u-name');
+        const itemsBox = document.getElementById('items-box');
+        const totalDisp = document.getElementById('total');
+        const totalQtyDisp = document.getElementById('total-qty');
+
+        // 渲染人員頁籤 (含新增與預設人員)
+        let htmlTabs = '<button class="btn-add" onclick="showModal(true)">+ 新增</button>';
+        let grandBundles = 0; // 團購總包數
+
+        users.forEach((u, i) => {
+            // V4 特有功能：購物包數顯示在名字旁邊
+            let userQty = u.orders.reduce((sum, o) => sum + o.q, 0); 
+            grandBundles += userQty;
+            htmlTabs += `<div class="user-tab ${i===cur?'active':''}" onclick="cur=${i};render()">
+                <span>${u.name}</span>${userQty>0?`<span class="cart-count">${userQty}</span>`:''}<span class="del-u" onclick="delU(${i}, event)">×</span>
+            </div>`;
+        });
+        tabBox.innerHTML = htmlTabs;
+
+        // UI切換
+        if(cur >= 0) {
+            welcome.style.display = 'none';
+            orderUi.style.display = 'block';
+            curNameDisp.innerHTML = `👤 ${users[cur].name} 的採購清單`;
+            
+            let oHtml = '';
+            users[cur].orders.forEach((o, oi) => {
+                // ❤️個人採購明細顯示：單項顯示單包原價 $80，折扣後合計在 LINE 訊息計❤️
+                oHtml += `<div class="order-item">
+                    <div><b>${o.f}</b> $${80 * o.q} <br><small>(${o.q}包)${o.n ? '<small style="color:#888;">📝 '+o.n+'</small>' : ''}</small></div>
+                    <button class="btn-del-o" onclick="delO(${oi})">刪除</button>
+                </div>`;
+            });
+            itemsBox.innerHTML = oHtml || '<p style="color:#aaa; text-align:center; padding:20px;">清單為空</p>';
+        } else {
+            welcome.style.display = 'block';
+            orderUi.style.display = 'none';
+        }
+
+        //❤️❤️❤️❤️重要：底部總金額應用複雜折扣計算❤️❤️❤️❤️
+        totalDisp.innerText = `$${calculatePrice(grandBundles)}`;
+        totalQtyDisp.innerText = grandBundles; // 總包數統計在底部結帳欄
+    }
+
+    // V4 LINE 匯出邏輯 (專業報表與複雜計價)
+    function sendLine() {
+        if(!users.length) return alert("還沒有採購資料喔！");
+        let msg = "【❤️日本咔哩咔哩/蝦餅❤️ 團購明細】\n";
+        let summary_qty = 0; // 團購總包數
+
+        let personal_msgs = []; // 放每個人折扣後清單的陣列
+
+        // 第一區：個人詳細清單與折扣後價格
+        users.forEach(u=>{ 
+            if(u.orders.length){ 
+                let p_msg = `👤 [${u.name}]\n`; 
+                let p_bundles = 0; // 個人買幾包
+                
+                u.orders.forEach(o=>{ 
+                    p_bundles += o.q; // 個人總包數
+                    p_msg += `▫️ ${o.f} x ${o.q}包\n`; 
+                    if(o.n) p_msg += `  註：${o.n}\n`; 
+                });
+                
+                // ❤️核心：計算個人合計優惠價格❤️
+                let p_price = calculatePrice(p_bundles);
+                p_msg += `💰 個人合計：$${p_price} 元 (共 ${p_bundles} 包)\n`; 
+                personal_msgs.push(p_msg);
+                
+                // 統計團購總包數
+                summary_qty += p_bundles; 
+            }
+        });
+
+        if(personal_msgs.length === 0) return alert("目前沒有採購資料喔！");
+        msg += personal_msgs.join("\n"); // 把個人訊息接起來
+
+        // 第二區：店家統計報表與團購總金額
+        msg+=`\n==================\n🏠 【店家總計報表】(共 ${summary_qty} 包)\n`;
+        
+        let bundle3_grand = Math.floor(summary_qty / 3);
+        let bundle2_grand = Math.floor((summary_qty % 3) / 2);
+        let bundle1_grand = (summary_qty % 3) % 2;
+
+        msg+=`● 吃 3 包優惠：${bundle3_grand} 次\n`;
+        msg+=`● 吃 2 包優惠：${bundle2_grand} 次\n`;
+        msg+=`● 吃單包價格：${bundle1_grand} 次\n`;
+        
+        // 團購總計金額 (折扣後)
+        let sum_grand = calculatePrice(summary_qty);
+        msg+=`\n💰 團購總計金額：$${sum_grand}元`; 
+        
+        window.location.href="https://line.me/R/msg/text/?"+encodeURIComponent(msg);
+    }
+
+    // 初始化啟動預設人員
+    initDefaultUsers();
 </script>
+
 </body>
 </html>
